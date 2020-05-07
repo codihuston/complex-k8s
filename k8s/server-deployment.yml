@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+# the deployment specification
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: server
+  # the pod template
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: client
+          image: codihuston/multi-docker-server
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              # the name of the cluster ip service for redis
+              value: redis-cluster-ip-service
+            - name: REDIS_PORT
+              value: "6379"
+            - name: PGUSER
+              value: postgres
+            - name: PGHOST
+            # the name of the cluster ip service for postgres
+              value: postgres-cluster-ip-service
+            - name: PGDATABASE
+              value: postgres
+            - name: PGPORT
+              value: "5432"
+            # use the k8s secret that was generated (name of the env var. NOT 
+            # the name of the secret object itself)
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  # the name of the secret object the value should come from
+                  name: pgpassword
+                  # a secret can store multiple key value pairs,
+                  # @ CLI we specified --from-literal PGPASSWORD=..., this is
+                  # what this key is referencing
+                  key: PGPASSWORD
+      

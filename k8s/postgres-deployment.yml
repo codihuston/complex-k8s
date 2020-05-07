@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: postgres
+  template:
+    metadata:
+      labels:
+        component: postgres
+    spec:
+      volumes:
+        # assign the following slice of storage this name
+        - name: postgres-storage
+          persistentVolumeClaim:
+            # this tells k8s to get a slice of storage from the storage provider
+            claimName: database-persistent-volume-claim
+      containers:
+        - name: server
+          image: postgres
+          ports:
+            - containerPort: 5432
+          volumeMounts: 
+            # this key here, maps to the above volume named above on line 16
+            - name: postgres-storage
+            # the data directory postgres uses on the HDD (in its container)
+              mountPath: /var/lib/postgresql/data
+            # any data inside the above path is nested in this folder in the vol
+            # postgres can sometimes argue with volumes, so best to save its
+            # contents under this sub directory on the volume
+              subPath: postgres
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD
