@@ -16,5 +16,5 @@ kubectl apply -f k8s
 
 # update the images
 kubectl set image deployments/server-deployment server=codihuston/multi-docker-server:$SHA
-kubectl set image deployments/client-deployment server=codihuston/multi-docker-client:$SHA
-kubectl set image deployments/worker-deployment server=codihuston/multi-docker-worker:$SHA
+kubectl set image deployments/client-deployment client=codihuston/multi-docker-client:$SHA
+kubectl set image deployments/worker-deployment worker=codihuston/multi-docker-worker:$SHA
