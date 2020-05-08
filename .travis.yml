@@ -1,6 +1,11 @@
 sudo: required
 services:
   - docker
+env:
+  global:
+    - SHA=$(git rev-parse HEAD)
+    # disable any gcp sdk prompts
+    - CLOUDSQL_CORE_DISABLE_PROMPTS=1
 before_install:
   # paste in the encrypted file
   - openssl aes-256-cbc -K $encrypted_5f58de70ba9f_key -iv $encrypted_5f58de70ba9f_iv -in complex-k8s-276616-4886bdfa41ac.json.enc -out complex-k8s-276616-4886bdfa41ac.json -d
@@ -16,4 +21,22 @@ before_install:
   # 3. download and install the travis cli
   # 4. encrypt and upload said file to travis
   # 5. in travis.yml, add code to decrypt and load it into this environment
+  #   - this service-account.json file is placed here by the first command
   - gcloud auth activate-service-account --key-file service-account.json
+  # tell sdk which cluster we are using
+  - gcloud config set project complex-k8s-276616
+  - gcloud config set compute/zone us-central1-c
+  - gcloud container clusters get-credentials complex-k8s-cluster-01
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t codihuston/react-test -f ./client/Dockerfile.dev ./client
+
+# test our containers
+script:
+  - docker run -e CI=true codihuston/react-test npm run test
+
+# run this script when commits pushed to master
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master
