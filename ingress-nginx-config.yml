@@ -1,4 +1,4 @@
-
+# for DEV Only
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -288,7 +288,8 @@ spec:
   externalTrafficPolicy: Local
   ports:
     - name: http
-      port: 8000
+      port: 80
+      #port: 8000
       protocol: TCP
       targetPort: http
     - name: https
