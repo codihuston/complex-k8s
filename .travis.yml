@@ -1,0 +1,19 @@
+sudo: required
+services:
+  - docker
+before_install:
+  # paste in the encrypted file
+  - openssl aes-256-cbc -K $encrypted_5f58de70ba9f_key -iv $encrypted_5f58de70ba9f_iv -in complex-k8s-276616-4886bdfa41ac.json.enc -out complex-k8s-276616-4886bdfa41ac.json -d
+  # install google cloud sdk
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  # apply google sdk bash to this shell
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  # install kubectl
+  - gcloud components update kubectl
+  # use a service account, created in GCP (an AWS IAM user equiv.)
+  # 1. create a service acct
+  # 2. download the credentials to a json file
+  # 3. download and install the travis cli
+  # 4. encrypt and upload said file to travis
+  # 5. in travis.yml, add code to decrypt and load it into this environment
+  - gcloud auth activate-service-account --key-file service-account.json
