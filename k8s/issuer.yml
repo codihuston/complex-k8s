@@ -1,6 +1,6 @@
 # purpose: to describe to the cert manager where it should go when
 #   attempting to get a certificate
-apiVersion: certmanager.k8s.io/v1alpha2
+apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
   # named after our issuer
