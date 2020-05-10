@@ -7,7 +7,7 @@ spec:
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
-  # this puts on the cert: this cert is good for this domain
+  # this puts on the cert: this cert is good for this domain 
   commonName: codihuston.dev
   dnsNames:
     - codihuston.dev
