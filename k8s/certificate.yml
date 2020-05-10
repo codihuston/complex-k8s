@@ -1,0 +1,23 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: codihuston-dev-tls
+spec:
+  secretName: codihuston-dev
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  # this puts on the cert: this cert is good for this domain
+  commonName: codihuston.dev
+  dnsNames:
+    - codihuston.dev
+    - www.codihuston.dev
+  acme:
+    config:
+      - http01:
+          ingressClass: nginx
+        # verificaton process will attempt to access these to confirm they work
+        domains:
+          - codihuston.dev
+          - www.codihuston.dev
+  
