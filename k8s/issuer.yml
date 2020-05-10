@@ -4,14 +4,14 @@ apiVersion: cert-manager.io/v1alpha2
 kind: ClusterIssuer
 metadata:
   # named after our issuer
-  name: letencrypt-prod
+  name: letsencrypt-prod
 spec:
   acme:
     # link to the letsencrypt apit to use
     server: https://acme-v02.api.letsencrypt.org/directory
     # not used by the process, but is a requirement from letsencrypt
     email: "codingwithcodi@gmail.com"
-    privatKeySecretRef:
+    privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
       - http01:
