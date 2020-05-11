@@ -15,7 +15,7 @@ spec:
         component: server
     spec:
       containers:
-        - name: client
+        - name: server
           image: codihuston/multi-docker-server
           ports:
             - containerPort: 5000
