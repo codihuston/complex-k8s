@@ -1,0 +1,23 @@
+apiVersion: skaffold/v1beta2
+kind: Config
+build:
+  local:
+    # do not push to docker hub when built
+    push: false
+  artifacts:
+    - image: codihuston/multi-docker-client
+      context: client
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        # any changes to any js file, update it in the container
+        '***/*.js': .
+        '***/*.css': .
+        '***/*.html': .
+deploy:
+  kubectl:
+    # path to k8s deployment configs
+    manifests:
+      - k8s-dev/*.yml
+      #- k8s/client-deployment.yml
+      #- k8s/ingress-service.yml
